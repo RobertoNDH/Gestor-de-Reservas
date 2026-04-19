@@ -1,0 +1,49 @@
+# Entornos virtuales y configuraciones locales
+venv/
+env/
+ENV/
+.env
+.idea/
+.vscode/
+local_settings.py
+
+# Directorios de compilados y caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Base de datos local
+db.sqlite3
+db.sqlite3-journal
+
+# Logs
+*.log
+
+# Carpetas de OS (Mac/Windows)
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Archivos estáticos y subidas de usuario
+media/
+staticfiles/
+static/
