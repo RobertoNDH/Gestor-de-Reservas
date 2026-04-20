@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 class Resource(models.Model):
     RESOURCE_TYPES = (
@@ -56,6 +57,43 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"Reserva de {self.user.username} - {self.resource.name} ({self.start_time.strftime('%Y-%m-%d %H:%M')})"
+    def clean(self):
+        super().clean()
+        
+        if self.start_time and self.end_time:
+            if self.start_time >= self.end_time:
+                raise ValidationError("La fecha de inicio debe ser anterior a la fecha de finalización.")
+            
+            day_of_week = self.start_time.weekday()
+            req_start_time = self.start_time.time()
+            req_end_time = self.end_time.time()
+            
+            availabilities = Availability.objects.filter(
+                resource=self.resource,
+                day_of_week=day_of_week,
+                start_time__lte=req_start_time,
+                end_time__gte=req_end_time
+            )
+            
+            if not availabilities.exists():
+                raise ValidationError("El recurso no está disponible (o está cerrado) en esta franja horaria.")
+            
+            if not self.is_cancelled:
+                overlapping = Booking.objects.filter(
+                    resource=self.resource,
+                    is_cancelled=False,
+                    start_time__lt=self.end_time,
+                    end_time__gt=self.start_time
+                )
+                if self.pk:
+                    overlapping = overlapping.exclude(pk=self.pk)
+                    
+                if overlapping.exists():
+                    raise ValidationError("Ya existe una reserva que se solapa con el horario indicado.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = "Reserva"
