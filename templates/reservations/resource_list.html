@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Nuestros Recursos</h2>
+    <p>Selecciona un recurso para ver su disponibilidad o realizar una reserva.</p>
+    <ul>
+        {% for resource in resources %}
+            <li>
+                <a href="{% url 'reservations:resource_detail' resource.pk %}">{{ resource.name }}</a> 
+                - {{ resource.get_resource_type_display }}
+            </li>
+        {% empty %}
+            <li>No hay recursos disponibles por el momento.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

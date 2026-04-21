@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{{ resource.name }}</h2>
+    <p><strong>Tipo:</strong> {{ resource.get_resource_type_display }}</p>
+    <p><strong>Descripción:</strong> {{ resource.description }}</p>
+    <p><a href="{% url 'reservations:resource_list' %}">Volver al listado</a></p>
+
+    <hr>
+    
+    <h3>Horario de Apertura</h3>
+    <ul>
+        {% for avail in resource.availabilities.all %}
+            <li>{{ avail.get_day_of_week_display }}: {{ avail.start_time }} a {{ avail.end_time }}</li>
+        {% empty %}
+            <li>No hay horarios definidos. Probablemente no se puede reservar.</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+    <!-- Aquí irá el Calendario Visual en la Fase 4 -->
+    <h3>Calendario de este recurso</h3>
+    <div id="calendar-placeholder-fase3" style="border: 2px dashed #ccc; padding: 20px; text-align: center;">
+        <p>[El calendario FullCalendar se renderizará aquí en la siguiente Fase]</p>
+    </div>
+
+    <hr>
+
+    <h3>Realizar Reserva</h3>
+    <form method="post" action="{% url 'reservations:resource_detail' resource.pk %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Confirmar Reserva</button>
+    </form>
+
+{% endblock %}

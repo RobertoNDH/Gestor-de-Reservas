@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Reservas</title>
+</head>
+<body>
+    <header>
+        <h1>Gestión de Reservas Premium</h1>
+        {% if user.is_authenticated %}
+            <p>Hola, {{ user.username }}! | <a href="/admin/">Panel Admin</a></p>
+        {% else %}
+            <p>Invitado | <a href="/admin/">Iniciar sesión (Admin)</a></p>
+        {% endif %}
+    </header>
+
+    <main>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>
