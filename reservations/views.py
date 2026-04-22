@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from django.db import transaction
@@ -65,3 +66,22 @@ class ResourceDetailView(DetailView):
         else:
             messages.error(request, "Por favor, corrige los errores del formulario.")
             return self.render_to_response(self.get_context_data(form=form))
+
+def api_resource_bookings(request, pk):
+    resource = get_object_or_404(Resource, pk=pk)
+    bookings = Booking.objects.filter(resource=resource, is_cancelled=False)
+    
+    events = []
+    for booking in bookings:
+        events.append({
+            'title': 'Reservado',
+            'start': booking.start_time.isoformat(),
+            'end': booking.end_time.isoformat(),
+            'color': '#ff4757', # Rojo premium
+            'textColor': '#ffffff',
+            'display': 'block'
+        })
+    
+    # Podríamos añadir como eventos en gris el horario disponible si quisiéramos, 
+    # pero como "eventos" bloqueados basta.
+    return JsonResponse(events, safe=False)
