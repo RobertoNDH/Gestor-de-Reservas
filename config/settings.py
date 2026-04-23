@@ -9,6 +9,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -76,6 +77,25 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Gestor Admin",
+    "site_header": "ReservaTech Premium",
+    "site_brand": "ReservaTech",
+    "welcome_sign": "Gestión Central de Recursos y Reservas",
+    "copyright": "ReservaTech",
+    "search_model": ["accounts.User", "reservations.Booking"],
+    "topmenu_links": [
+        {"name": "Volver a la Web",  "url": "/", "new_window": False},
+    ],
+    "show_ui_builder": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "cyborg",
+    "dark_mode_theme": "cyborg",
+}
+
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 AUTH_USER_MODEL = 'accounts.User'
