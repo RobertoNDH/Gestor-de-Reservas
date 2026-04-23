@@ -91,6 +91,27 @@
         </div>
     </div>
 
+    {% if user.is_authenticated %}
+        <div class="glass-card" style="margin-top: 3rem;">
+            <h3 style="border-bottom: 1px solid var(--border-card); padding-bottom: 0.5rem; margin-bottom: 1rem;">Tus Reservas Activas para este Espacio</h3>
+            <div>
+                {% for booking in resource.bookings.all %}
+                    {% if booking.user == user and not booking.is_cancelled %}
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <div>
+                                <strong style="color: var(--neon-accent);">{{ booking.start_time|date:"d M Y, H:i" }}</strong> - {{ booking.end_time|date:"H:i" }}
+                            </div>
+                            <form method="post" action="{% url 'reservations:cancel_booking' booking.pk %}" style="margin: 0; min-width: auto;">
+                                {% csrf_token %}
+                                <button type="submit" style="background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); padding: 0.5rem 1rem; width: auto; font-size: 0.8rem; box-shadow: none;" onclick="return confirm('¿Seguro que quieres cancelar esta reserva?');">Cancelar Reserva</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');

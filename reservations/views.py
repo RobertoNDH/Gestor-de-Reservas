@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from django.db import transaction
@@ -85,3 +86,13 @@ def api_resource_bookings(request, pk):
     # Podríamos añadir como eventos en gris el horario disponible si quisiéramos, 
     # pero como "eventos" bloqueados basta.
     return JsonResponse(events, safe=False)
+
+@login_required
+def cancel_booking(request, pk):
+    booking = get_object_or_404(Booking, pk=pk, user=request.user)
+    if request.method == 'POST':
+        booking.is_cancelled = True
+        booking.save()
+        messages.success(request, f"Notificación: Tu reserva para el {booking.start_time.strftime('%d/%m/%Y %H:%M')} ha sido cancelada satisfactoriamente.")
+        return redirect('reservations:resource_detail', pk=booking.resource.pk)
+    return redirect('reservations:resource_list')
