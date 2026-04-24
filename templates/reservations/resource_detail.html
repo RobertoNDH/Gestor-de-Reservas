@@ -1,62 +1,18 @@
 {% extends 'base.html' %}
 
 {% block extra_head %}
-<!-- FullCalendar JS -->
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
-
-<style>
-    .layout-split {
-        display: grid;
-        grid-template-columns: 1fr 350px;
-        gap: 2rem;
-        align-items: start;
-    }
-
-    @media (max-width: 900px) {
-        .layout-split {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    /* Style the calendar specifically for dark mode */
-    #calendar {
-        background: var(--bg-card);
-        padding: 1.5rem;
-        border-radius: 16px;
-        border: 1px solid var(--border-card);
-        min-height: 600px;
-    }
-    
-    .fc-theme-standard td, .fc-theme-standard th, .fc-theme-standard .fc-scrollgrid {
-        border-color: rgba(255,255,255,0.1) !important;
-    }
-    
-    .fc-toolbar-title { color: var(--text-main); font-weight: 800;}
-    .fc-button-primary { 
-        background: rgba(15, 23, 42, 0.8) !important; 
-        border-color: var(--border-card) !important;
-    }
-    .fc-button-active {
-        background: var(--neon-accent) !important;
-        border-color: var(--neon-accent) !important;
-        color: #000 !important;
-    }
-    .fc-day-today { background: rgba(56, 189, 248, 0.05) !important; }
-    .fc-col-header-cell-cushion, .fc-daygrid-day-number { color: var(--text-muted); text-decoration: none;}
-</style>
 {% endblock %}
 
 {% block content %}
     <a href="{% url 'reservations:resource_list' %}" style="color: var(--text-muted); text-decoration: none; margin-bottom: 1.5rem; display: block;">&larr; Volver a todos los espacios</a>
 
     <div class="layout-split">
-        <!-- Izquierda: Calendario -->
         <div class="calendar-wrapper">
             <h2 style="font-size: 2rem; margin-bottom: 1.5rem;">{{ resource.name }} <span style="font-size: 1rem; color:var(--text-muted); font-weight: normal;">| {{ resource.get_resource_type_display }}</span></h2>
             <div id="calendar"></div>
         </div>
 
-        <!-- Derecha: Formulario -->
         <div class="glass-card" style="position: sticky; top: 100px;">
             <h3 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-card); padding-bottom: 0.5rem; font-weight: 800;">Nueva Reserva</h3>
             <form method="post" action="{% url 'reservations:resource_detail' resource.pk %}">
@@ -64,7 +20,7 @@
                 
                 {% for field in form %}
                     <div style="margin-bottom: 1.2rem;">
-                        <label style="display: block; font-size: 0.9rem; margin-bottom: 0.2rem; color: var(--text-muted);">
+                        <label for="{{ field.id_for_label }}" style="display: block; font-size: 0.9rem; margin-bottom: 0.2rem; color: var(--text-muted);">
                             {{ field.label }}
                         </label>
                         {% if field.name == 'is_recurring' %}
