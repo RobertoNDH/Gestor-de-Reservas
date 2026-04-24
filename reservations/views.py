@@ -78,13 +78,11 @@ def api_resource_bookings(request, pk):
             'title': 'Reservado',
             'start': booking.start_time.isoformat(),
             'end': booking.end_time.isoformat(),
-            'color': '#ff4757', # Rojo premium
+            'color': '#ff4757',
             'textColor': '#ffffff',
             'display': 'block'
         })
     
-    # Podríamos añadir como eventos en gris el horario disponible si quisiéramos, 
-    # pero como "eventos" bloqueados basta.
     return JsonResponse(events, safe=False)
 
 @login_required
