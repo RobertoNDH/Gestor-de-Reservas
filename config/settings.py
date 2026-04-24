@@ -93,7 +93,6 @@ JAZZMIN_SETTINGS = {
 
 JAZZMIN_UI_TWEAKS = {
     "theme": "cyborg",
-    "dark_mode_theme": "cyborg",
 }
 
 STATICFILES_DIRS = [BASE_DIR / 'static']
