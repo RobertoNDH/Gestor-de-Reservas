@@ -5,6 +5,8 @@ from django.views.generic import ListView, DetailView
 from django.contrib import messages
 from django.db import transaction
 from django.core.exceptions import ValidationError
+from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 from datetime import timedelta
 from .models import Resource, Booking
 from .forms import BookingForm
@@ -23,6 +25,13 @@ class ResourceDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         if 'form' not in context:
             context['form'] = BookingForm()
+        if self.request.user.is_authenticated:
+            context['user_bookings'] = Booking.objects.filter(
+                resource=self.object,
+                user=self.request.user,
+                is_cancelled=False,
+                end_time__gte=timezone.now()
+            ).order_by('start_time')
         return context
 
     def post(self, request, *args, **kwargs):
@@ -71,6 +80,20 @@ class ResourceDetailView(DetailView):
 def api_resource_bookings(request, pk):
     resource = get_object_or_404(Resource, pk=pk)
     bookings = Booking.objects.filter(resource=resource, is_cancelled=False)
+    
+    start_str = request.GET.get('start')
+    end_str = request.GET.get('end')
+    
+    if start_str:
+        start_dt = parse_datetime(start_str)
+        if start_dt:
+            bookings = bookings.filter(end_time__gte=start_dt)
+            
+    if end_str:
+        end_dt = parse_datetime(end_str)
+        if end_dt:
+            bookings = bookings.filter(start_time__lte=end_dt)
+            
     
     events = []
     for booking in bookings:
