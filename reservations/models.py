@@ -64,6 +64,9 @@ class Booking(models.Model):
             if self.start_time >= self.end_time:
                 raise ValidationError("La fecha de inicio debe ser anterior a la fecha de finalización.")
             
+            if not hasattr(self, 'resource_id') or not self.resource_id:
+                return
+            
             day_of_week = self.start_time.weekday()
             req_start_time = self.start_time.time()
             req_end_time = self.end_time.time()
