@@ -1,6 +1,6 @@
 :root {
-    --bg-dark: #0f172a;
-    --bg-card: rgba(30, 41, 59, 0.7);
+    --bg-dark: #131313;
+    --bg-card: #090808;
     --border-card: rgba(255, 255, 255, 0.1);
     --neon-accent: #a855f7;
     --neon-gradient: linear-gradient(135deg, #a855f7, #ec4899);
@@ -28,7 +28,7 @@ body {
 }
 
 header {
-    background: rgba(15, 23, 42, 0.8);
+    background: var(--bg-dark);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border-card);
     padding: 1.5rem 5%;
